@@ -44,7 +44,7 @@ body {
     position: absolute;
 }
 
-.obstacle2 {
+.rupees {
     background-image: url('./images/Green\ Rupee.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -65,3 +65,11 @@ body {
 #score {
     text-align: center;
 }
+
+ #gameover {
+    background-color: aliceblue;
+    font-family: 'Early Gameboy';
+    border: solid;
+    position: absolute;
+    left: 80%;
+ }

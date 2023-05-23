@@ -1,8 +1,10 @@
 class Game {
     constructor() {
         this.player = null;
-        this.obstaclesArr = [];
-        this.scoreCount = 0
+        this.obstacleArrCucoos = [];
+        this.obstacleArrRupees = [];
+        this.scoreCount = 0;
+        this.rupeesScoreCount = 0;
     }
 
     startButton() {
@@ -23,44 +25,90 @@ class Game {
         this.attachEventListeners();
         
         setInterval(() => {
-            const newObstacle = new Obstacle();
-            this.obstaclesArr.push(newObstacle)
+            const newObstacleCucoo = new Obstacle();
+            this.obstacleArrCucoos.push(newObstacleCucoo)
         }, 2000);
 
         setInterval(() => {
-            this.obstaclesArr.forEach((obstacleInstance, index) => {
+            this.obstacleArrCucoos.forEach((obstacleInstance, index) => {
                 obstacleInstance.moveDown()
-                this.detectCollision(obstacleInstance, index)
-                this.removeObstacle(obstacleInstance)
+                this.detectCollisionCucoo(obstacleInstance, index)
+                this.removeObstacleCucoo(obstacleInstance)
             });
         }, 60)
-        }
 
-        scoreCounter() {
+        setInterval(() => {
+            const newObstacleRupee = new Rupees();
+            this.obstacleArrRupees.push(newObstacleRupee)
+        }, 1700);
+
+        setInterval(() => {
+            this.obstacleArrRupees.forEach((obstacleInstance, index) => {
+                obstacleInstance.moveDown()
+                this.detectCollisionRupee(obstacleInstance, index)
+                this.removeObstacleRupee(obstacleInstance)
+            });
+        }, 60)
+    }
+
+        scoreCounterCucoo() {
             document.getElementById('score');
             this.scoreCount++
             score.textContent = `Cuccos ${this.scoreCount}`
         }
 
-    detectCollision(obstacleInstance, index) {
+        scoreCounterRupee() {
+            document.getElementById('rupeesScore');
+            this.rupeesScoreCount++
+            rupeesScore.textContent = `Rupees ${this.rupeesScoreCount}`
+        }
+
+    detectCollisionCucoo(obstacleInstance, index) {
         if (
             obstacleInstance.positionX < this.player.positionX + this.player.width &&
             obstacleInstance.positionX + obstacleInstance.width > this.player.positionX &&
             obstacleInstance.positionY < this.player.positionY + this.player.height &&
             obstacleInstance.height + obstacleInstance.positionY > this.player.positionY) {
             obstacleInstance.domElement.remove();
-            this.obstaclesArr.splice(index, 1)
-            this.scoreCounter();
+            this.obstacleArrCucoos.splice(index, 1)
+            this.scoreCounterCucoo();
         }
-        
     }
 
-    removeObstacle(obstacleInstance) {
+        detectCollisionRupee(obstacleInstance, index) {
+            if (
+                obstacleInstance.positionX < this.player.positionX + this.player.width &&
+                obstacleInstance.positionX + obstacleInstance.width > this.player.positionX &&
+                obstacleInstance.positionY < this.player.positionY + this.player.height &&
+                obstacleInstance.height + obstacleInstance.positionY > this.player.positionY) {
+                obstacleInstance.domElement.remove();
+                this.obstacleArrRupees.splice(index, 1);
+                this.scoreCounterRupee();
+            }
+        }
+
+    removeObstacleCucoo(obstacleInstance) {
         if (obstacleInstance.positionY < 0 ) {
-            obstacleInstance.domElement.remove()
-            this.obstaclesArr.shift(obstacleInstance);
+            obstacleInstance.domElement.remove();
+            this.obstacleArrCucoos.shift(obstacleInstance)
         }
     }
+
+    removeObstacleRupee(obstacleInstance) {
+        if (obstacleInstance.positionY < 0 ) {
+            obstacleInstance.domElement.remove();
+            this.obstacleArrRupees.shift(obstacleInstance)
+        }
+    }
+
+    gameover() {
+            let gameoverNode = document.createDomElement('div')
+            gameoverNode.setAttribute('id', 'gameover')
+            gameoverNode.innerText = 'Stop Killing Chickens'
+            const playerParent = document.getElementById("board");
+            playerParent.appendChild(gameoverNode);
+    }
+
     attachEventListeners() {
         {
             document.addEventListener("keydown", (e) => {
@@ -139,6 +187,42 @@ class Obstacle {
         this.domElement = document.createElement("div");
 
         this.domElement.className = "obstacle1";
+        this.domElement.style.width = this.width + "vw";
+        this.domElement.style.height = this.height + "vh";
+        this.domElement.style.left = this.positionX + "vw";
+        this.domElement.style.bottom = this.positionY + "vh";
+
+        const playerParent = document.getElementById("board");
+        playerParent.appendChild(this.domElement);
+
+    }
+
+    moveDown() {
+        this.positionY--
+        this.domElement.style.bottom = this.positionY + "vh";
+    }
+}
+
+class Rupees {
+    constructor() {
+        this.positionX = this.generateRandomNumber(0, 70); // change to be minus width
+        this.positionY = 100;
+        this.width = 5;
+        this.height = 10;
+        this.domElement = null;
+
+        this.createDomElement();
+    }
+
+    generateRandomNumber(min, max) {
+        return (Math.random() * (max - min + 1)) + min;
+    }
+
+    createDomElement() {
+
+        this.domElement = document.createElement("div");
+
+        this.domElement.className = "rupees";
         this.domElement.style.width = this.width + "vw";
         this.domElement.style.height = this.height + "vh";
         this.domElement.style.left = this.positionX + "vw";
