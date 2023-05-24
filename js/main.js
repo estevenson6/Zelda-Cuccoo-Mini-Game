@@ -5,6 +5,8 @@ class Game {
         this.obstacleArrRupees = [];
         this.scoreCount = 0;
         this.rupeesScoreCount = 0;
+        this.intervalId1 = null;
+        this.intervalId2 = null;
     }
 
     startButton() {
@@ -20,16 +22,16 @@ class Game {
         playerParent.appendChild(startButton);
     }
 
-    start() { 
+    start() {
         this.player = new Player;
         this.attachEventListeners();
-        
+
         setInterval(() => {
             const newObstacleCucoo = new Obstacle();
             this.obstacleArrCucoos.push(newObstacleCucoo)
         }, 2000);
 
-        setInterval(() => {
+        this.intervalId1 = setInterval(() => {
             this.obstacleArrCucoos.forEach((obstacleInstance, index) => {
                 obstacleInstance.moveDown()
                 this.detectCollisionCucoo(obstacleInstance, index)
@@ -42,7 +44,7 @@ class Game {
             this.obstacleArrRupees.push(newObstacleRupee)
         }, 1700);
 
-        setInterval(() => {
+        this.intervalId2 = setInterval(() => {
             this.obstacleArrRupees.forEach((obstacleInstance, index) => {
                 obstacleInstance.moveDown()
                 this.detectCollisionRupee(obstacleInstance, index)
@@ -51,17 +53,18 @@ class Game {
         }, 60)
     }
 
-        scoreCounterCucoo() {
-            document.getElementById('score');
-            this.scoreCount++
-            score.textContent = `Cuccos ${this.scoreCount}`
-        }
+    scoreCounterCucoo() {
+        document.getElementById('score');
+        this.scoreCount++
+        score.textContent = `Cuccos ${this.scoreCount}`
+        console.log(this.scoreCount)
+    }
 
-        scoreCounterRupee() {
-            document.getElementById('rupeesScore');
-            this.rupeesScoreCount++
-            rupeesScore.textContent = `Rupees ${this.rupeesScoreCount}`
-        }
+    scoreCounterRupee() {
+        document.getElementById('rupeesScore');
+        this.rupeesScoreCount++
+        rupeesScore.textContent = `Rupees ${this.rupeesScoreCount}`
+    }
 
     detectCollisionCucoo(obstacleInstance, index) {
         if (
@@ -72,54 +75,75 @@ class Game {
             obstacleInstance.domElement.remove();
             this.obstacleArrCucoos.splice(index, 1)
             this.scoreCounterCucoo();
+            this.gameover()
         }
     }
 
-        detectCollisionRupee(obstacleInstance, index) {
-            if (
-                obstacleInstance.positionX < this.player.positionX + this.player.width &&
-                obstacleInstance.positionX + obstacleInstance.width > this.player.positionX &&
-                obstacleInstance.positionY < this.player.positionY + this.player.height &&
-                obstacleInstance.height + obstacleInstance.positionY > this.player.positionY) {
-                obstacleInstance.domElement.remove();
-                this.obstacleArrRupees.splice(index, 1);
-                this.scoreCounterRupee();
-            }
+    detectCollisionRupee(obstacleInstance, index) {
+        if (
+            obstacleInstance.positionX < this.player.positionX + this.player.width &&
+            obstacleInstance.positionX + obstacleInstance.width > this.player.positionX &&
+            obstacleInstance.positionY < this.player.positionY + this.player.height &&
+            obstacleInstance.height + obstacleInstance.positionY > this.player.positionY) {
+            obstacleInstance.domElement.remove();
+            this.obstacleArrRupees.splice(index, 1);
+            this.scoreCounterRupee();
         }
+    }
 
     removeObstacleCucoo(obstacleInstance) {
-        if (obstacleInstance.positionY < 0 ) {
+        if (obstacleInstance.positionY < 0) {
             obstacleInstance.domElement.remove();
             this.obstacleArrCucoos.shift(obstacleInstance)
         }
     }
 
     removeObstacleRupee(obstacleInstance) {
-        if (obstacleInstance.positionY < 0 ) {
+        if (obstacleInstance.positionY < 0) {
             obstacleInstance.domElement.remove();
             this.obstacleArrRupees.shift(obstacleInstance)
         }
     }
 
+    gameoverMessage() {
+        const gameoverMessage = document.createElement('p');
+        gameoverMessage.setAttribute('id', 'gameover');
+        gameoverMessage.innerText = 'Stop Killing Chickens!'
+        const playerParent = document.getElementById("board");
+        playerParent.appendChild(gameoverMessage);
+    }
+
+    stopGame() {
+        clearInterval(this.intervalId1);
+        clearInterval(this.intervalId2);
+    }
+
     gameover() {
-            let gameoverNode = document.createDomElement('div')
-            gameoverNode.setAttribute('id', 'gameover')
-            gameoverNode.innerText = 'Stop Killing Chickens'
-            const playerParent = document.getElementById("board");
-            playerParent.appendChild(gameoverNode);
+        if (this.scoreCount = 3) {
+            this.stopGame()
+            this.gameoverMessage()
+        }
+    }
+
+    winMessage() {
+        const winMesage = document.createElement('div');
+        this.winMessage.setAttribute('id', 'win-message');
+        winMesage.innerText = "You've won the Giant's Wallet! Congratulations"
+        const playerParent = document.getElementById("board");
+        playerParent.appendChild(gameoverMessage);
+        document.getElementById('win-Message').appendChild("walletImage");
+        walletImage.src = 'css\images\Wallet.png';
     }
 
     attachEventListeners() {
-        {
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "ArrowLeft") {
-                    game.player.moveLeft()
-                }
-                else if (e.key === "ArrowRight") {
-                    game.player.moveRight()
-                }
-            })
-        }
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft") {
+                game.player.moveLeft()
+            }
+            else if (e.key === "ArrowRight") {
+                game.player.moveRight()
+            }
+        })
     }
 }
 
@@ -246,4 +270,3 @@ audio.volume = 0.3;
 
 const game = new Game;
 game.startButton()
-
