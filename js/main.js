@@ -37,12 +37,12 @@ class Game {
                 this.detectCollisionCucoo(obstacleInstance, index)
                 this.removeObstacleCucoo(obstacleInstance)
             });
-        }, 60)
+        }, 50)
 
         setInterval(() => {
             const newObstacleRupee = new Rupees();
             this.obstacleArrRupees.push(newObstacleRupee)
-        }, 1700);
+        }, 2000);
 
         this.intervalId2 = setInterval(() => {
             this.obstacleArrRupees.forEach((obstacleInstance, index) => {
@@ -50,20 +50,20 @@ class Game {
                 this.detectCollisionRupee(obstacleInstance, index)
                 this.removeObstacleRupee(obstacleInstance)
             });
-        }, 60)
+        }, 50)
     }
 
     scoreCounterCucoo() {
         document.getElementById('score');
         this.scoreCount++
         score.textContent = `Cuccos ${this.scoreCount}`
-        console.log(this.scoreCount)
     }
 
     scoreCounterRupee() {
         document.getElementById('rupeesScore');
         this.rupeesScoreCount++
         rupeesScore.textContent = `Rupees ${this.rupeesScoreCount}`
+        console.log(this.rupeesScoreCount)
     }
 
     detectCollisionCucoo(obstacleInstance, index) {
@@ -75,7 +75,7 @@ class Game {
             obstacleInstance.domElement.remove();
             this.obstacleArrCucoos.splice(index, 1)
             this.scoreCounterCucoo();
-            this.gameover()
+            this.gameover();
         }
     }
 
@@ -88,6 +88,7 @@ class Game {
             obstacleInstance.domElement.remove();
             this.obstacleArrRupees.splice(index, 1);
             this.scoreCounterRupee();
+            this.win();
         }
     }
 
@@ -108,9 +109,22 @@ class Game {
     gameoverMessage() {
         const gameoverMessage = document.createElement('p');
         gameoverMessage.setAttribute('id', 'gameover');
-        gameoverMessage.innerText = 'Stop Killing Chickens!'
+        gameoverMessage.innerText = "You've killed too many chickens. They revolt and hunt you down. You're dead..."
         const playerParent = document.getElementById("board");
         playerParent.appendChild(gameoverMessage);
+        this.retryButton()
+    }
+
+    retryButton() {
+        const retryButton = document.createElement('button');
+        retryButton.setAttribute('id', 'retry-button')
+        retryButton.innerText = 'Try Again?';
+        retryButton.is = 'retryButton'
+        retryButton.addEventListener('click', () => {
+            window.location.reload(true);
+        })
+        const playerParent = document.getElementById("board");
+        playerParent.appendChild(retryButton);
     }
 
     stopGame() {
@@ -119,20 +133,26 @@ class Game {
     }
 
     gameover() {
-        if (this.scoreCount = 3) {
-            this.stopGame()
-            this.gameoverMessage()
+        if (this.scoreCount === 5) {
+            this.stopGame();
+            this.gameoverMessage();
         }
     }
 
     winMessage() {
-        const winMesage = document.createElement('div');
-        this.winMessage.setAttribute('id', 'win-message');
-        winMesage.innerText = "You've won the Giant's Wallet! Congratulations"
+        const winMessage = document.createElement('div');
+        winMessage.setAttribute('id', 'win-message');
+        winMessage.innerText = "You've won the Giant's Wallet! Congratulations...Now stop killing chickens and go save Hyrule!"
         const playerParent = document.getElementById("board");
-        playerParent.appendChild(gameoverMessage);
-        document.getElementById('win-Message').appendChild("walletImage");
-        walletImage.src = 'css\images\Wallet.png';
+        playerParent.appendChild(winMessage);
+    }
+
+    win() {
+        if (this.rupeesScoreCount === 10){
+            this.stopGame();
+            this.winMessage();
+            this.retryButton();
+        }
     }
 
     attachEventListeners() {

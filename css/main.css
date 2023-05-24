@@ -69,11 +69,48 @@ body {
  #gameover {
     background-color: aliceblue;
     font-family: 'Early Gameboy';
+    text-align: center;
     border: solid;
     position: absolute;
-    left: 80%;
+    padding-top: 8px;
+    left: 30vw;
+    top: 40vh;
+    width: 40vw;
+    height: 20vh;
  }
- #winMessage {
 
-    
+ #gameover::after{
+    background-color: aliceblue;
+    content: url(../css/images/pixilart-drawing\ \(1\).png);
+    display:list-item;
+    border-bottom: solid;
+ }
+
+ #retry-button {
+    position: relative;
+    left: 38%;
+    top: 80%;
+    min-width: 20vw;
+    min-height: 10vh;
+    font-family: 'Early Gameboy';
+    font-size: 1.7em;
+    background-color: aliceblue;
+    border: solid, black;
+
+ }
+ #win-message {
+    background-color: aliceblue;
+    font-family: 'Early Gameboy';
+    text-align: center;
+    border: solid;
+    position: absolute;
+    padding-top: 8px;
+    left: 30vw;
+    top: 40vh;
+    width: 40vw;
+    height: 20vh;   
+ }
+ #win-message::after {
+    content: url(../css/images/pixilart-drawing.png);
+    display: list-item;
  }
