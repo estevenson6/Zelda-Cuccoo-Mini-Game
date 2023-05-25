@@ -18,7 +18,7 @@ body {
 #board {
     background-image: url('./images/Zelda\ Image.webp');
     background-size: cover;
-    border: solid;
+    border: dashed black;
     width:80vw;
     height: 80vh;
     position: relative;
@@ -69,6 +69,7 @@ body {
     position: absolute;
     left: 60vw;
     top: 5vh;
+    z-index: 2;
 }
 
 #score {

@@ -9,6 +9,7 @@ class Game {
         this.intervalId2 = null;
         this.intervalId3 = null;
         this.intervalId4 = null;
+        this.mainMusic = new Audio('../sounds/02 - Main Theme.mp3');
     }
 
     startButton() {
@@ -31,7 +32,7 @@ class Game {
         this.intervalId1 = setInterval(() => {
             const newObstacleCucoo = new Obstacle();
             this.obstacleArrCucoos.push(newObstacleCucoo)
-        }, 2000);
+        }, 1200);
 
         this.intervalId2 = setInterval(() => {
             this.obstacleArrCucoos.forEach((obstacleInstance, index) => {
@@ -44,7 +45,7 @@ class Game {
         this.intervalId3 = setInterval(() => {
             const newObstacleRupee = new Rupees();
             this.obstacleArrRupees.push(newObstacleRupee)
-        }, 2000);
+        }, 1800);
 
         this.intervalId4 = setInterval(() => {
             this.obstacleArrRupees.forEach((obstacleInstance, index) => {
@@ -53,6 +54,8 @@ class Game {
                 this.removeObstacleRupee(obstacleInstance)
             });
         }, 50)
+       this.mainMusic.play();
+       this.mainMusic.volume = 0.4;
     }
 
     scoreCounterCucoo() {
@@ -78,6 +81,9 @@ class Game {
             this.obstacleArrCucoos.splice(index, 1)
             this.scoreCounterCucoo();
             this.gameover();
+            const cuccoSound = new Audio('../sounds/cucco.mp3');
+            cuccoSound.volume = 0.3;
+            cuccoSound.play();
         }
     }
 
@@ -91,6 +97,9 @@ class Game {
             this.obstacleArrRupees.splice(index, 1);
             this.scoreCounterRupee();
             this.win();
+            const rupeeSound = new Audio ('../sounds/Rupee.mp3');
+            rupeeSound.volume = 0.3;
+            rupeeSound.play();
         }
     }
 
@@ -114,6 +123,10 @@ class Game {
         gameoverMessage.innerText = "You've killed too many chickens. They revolt and hunt you down. You're dead..."
         const Parent = document.getElementById("board");
         Parent.appendChild(gameoverMessage);
+        const gameoverSound = new Audio('../sounds/86 - Game Over.mp3');
+        this.mainMusic.pause();
+        gameoverSound.play();
+        gameoverSound.volume = 0.4;
         this.retryButton()
     }
 
@@ -147,15 +160,19 @@ class Game {
         const winMessage = document.createElement('div');
         winMessage.setAttribute('id', 'win-message');
         winMessage.innerText = "You've won the Giant's Wallet! Congratulations...Now stop killing chickens and go save Hyrule!"
-        const playerParent = document.getElementById("board");
-        playerParent.appendChild(winMessage);
+        const Parent = document.getElementById("board");
+        Parent.appendChild(winMessage);
     }
 
     win() {
-        if (this.rupeesScoreCount === 1){
+        if (this.rupeesScoreCount === 10){
             this.stopGame();
             this.winMessage();
             this.retryButton();
+            const victorySound = new Audio('../sounds/Victory.mp3');
+            victorySound.volume = 0.3;
+            this.mainMusic.pause();
+            victorySound.play();
         }
     }
 
@@ -189,8 +206,8 @@ class Player {
         this.domElement.style.height = this.height + "vh";
         this.domElement.style.left = this.positionX + "vw";
         this.domElement.style.bottom = this.positionY + "vh";
-        const playerParent = document.getElementById("board");
-        playerParent.appendChild(this.domElement);
+        const Parent = document.getElementById("board");
+        Parent.appendChild(this.domElement);
     }
 
     moveLeft() {
@@ -219,7 +236,7 @@ class Obstacle {
     constructor() {
         this.positionX = this.generateRandomNumber(10, 70); // change to be minus width
         this.positionY = 80;
-        this.width = 5;
+        this.width = 8;
         this.height = 10;
         this.domElement = null;
 
@@ -240,8 +257,8 @@ class Obstacle {
         this.domElement.style.left = this.positionX + "vw";
         this.domElement.style.bottom = this.positionY + "vh";
 
-        const playerParent = document.getElementById("board");
-        playerParent.appendChild(this.domElement);
+        const Parent = document.getElementById("board");
+        Parent.appendChild(this.domElement);
 
     }
 
@@ -255,7 +272,7 @@ class Rupees {
     constructor() {
         this.positionX = this.generateRandomNumber(10, 70); // change to be minus width
         this.positionY = 80;
-        this.width = 5;
+        this.width = 7;
         this.height = 10;
         this.domElement = null;
 
@@ -276,8 +293,8 @@ class Rupees {
         this.domElement.style.left = this.positionX + "vw";
         this.domElement.style.bottom = this.positionY + "vh";
 
-        const playerParent = document.getElementById("board");
-        playerParent.appendChild(this.domElement);
+        const Parent = document.getElementById("board");
+        Parent.appendChild(this.domElement);
 
     }
 
@@ -285,12 +302,7 @@ class Rupees {
         this.positionY--
         this.domElement.style.bottom = this.positionY + "vh";
     }
-
-
 }
-
-const audio = document.getElementById('my-audio');
-audio.volume = 0.3;
 
 const game = new Game;
 game.startButton()
