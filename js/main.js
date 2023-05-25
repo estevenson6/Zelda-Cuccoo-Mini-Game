@@ -9,7 +9,7 @@ class Game {
         this.intervalId2 = null;
         this.intervalId3 = null;
         this.intervalId4 = null;
-        this.mainMusic = new Audio('../sounds/02 - Main Theme.mp3');
+        this.mainMusic = new Audio('./sounds/02 - Main Theme.mp3');
     }
 
     startButton() {
@@ -81,7 +81,7 @@ class Game {
             this.obstacleArrCucoos.splice(index, 1)
             this.scoreCounterCucoo();
             this.gameover();
-            const cuccoSound = new Audio('../sounds/cucco.mp3');
+            const cuccoSound = new Audio('./sounds/cucco.mp3');
             cuccoSound.volume = 0.3;
             cuccoSound.play();
         }
@@ -97,7 +97,7 @@ class Game {
             this.obstacleArrRupees.splice(index, 1);
             this.scoreCounterRupee();
             this.win();
-            const rupeeSound = new Audio ('../sounds/Rupee.mp3');
+            const rupeeSound = new Audio ('./sounds/Rupee.mp3');
             rupeeSound.volume = 0.3;
             rupeeSound.play();
         }
@@ -123,7 +123,7 @@ class Game {
         gameoverMessage.innerText = "You've killed too many chickens. They revolt and hunt you down. You're dead..."
         const Parent = document.getElementById("board");
         Parent.appendChild(gameoverMessage);
-        const gameoverSound = new Audio('../sounds/86 - Game Over.mp3');
+        const gameoverSound = new Audio('./sounds/86 - Game Over.mp3');
         this.mainMusic.pause();
         gameoverSound.play();
         gameoverSound.volume = 0.4;
@@ -169,7 +169,7 @@ class Game {
             this.stopGame();
             this.winMessage();
             this.retryButton();
-            const victorySound = new Audio('../sounds/Victory.mp3');
+            const victorySound = new Audio('./sounds/Victory.mp3');
             victorySound.volume = 0.3;
             this.mainMusic.pause();
             victorySound.play();
@@ -235,7 +235,7 @@ class Player {
 class Obstacle {
     constructor() {
         this.positionX = this.generateRandomNumber(10, 70); // change to be minus width
-        this.positionY = 80;
+        this.positionY = 75;
         this.width = 8;
         this.height = 10;
         this.domElement = null;
@@ -271,7 +271,7 @@ class Obstacle {
 class Rupees {
     constructor() {
         this.positionX = this.generateRandomNumber(10, 70); // change to be minus width
-        this.positionY = 80;
+        this.positionY = 75;
         this.width = 7;
         this.height = 10;
         this.domElement = null;
