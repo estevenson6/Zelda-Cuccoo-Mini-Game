@@ -7,6 +7,8 @@ class Game {
         this.rupeesScoreCount = 0;
         this.intervalId1 = null;
         this.intervalId2 = null;
+        this.intervalId3 = null;
+        this.intervalId4 = null;
     }
 
     startButton() {
@@ -18,20 +20,20 @@ class Game {
             this.start()
             startButton.style.display = 'none';
         })
-        const playerParent = document.getElementById("board");
-        playerParent.appendChild(startButton);
+        const Parent = document.getElementById("board");
+        Parent.appendChild(startButton);
     }
 
     start() {
         this.player = new Player;
         this.attachEventListeners();
 
-        setInterval(() => {
+        this.intervalId1 = setInterval(() => {
             const newObstacleCucoo = new Obstacle();
             this.obstacleArrCucoos.push(newObstacleCucoo)
         }, 2000);
 
-        this.intervalId1 = setInterval(() => {
+        this.intervalId2 = setInterval(() => {
             this.obstacleArrCucoos.forEach((obstacleInstance, index) => {
                 obstacleInstance.moveDown()
                 this.detectCollisionCucoo(obstacleInstance, index)
@@ -39,12 +41,12 @@ class Game {
             });
         }, 50)
 
-        setInterval(() => {
+        this.intervalId3 = setInterval(() => {
             const newObstacleRupee = new Rupees();
             this.obstacleArrRupees.push(newObstacleRupee)
         }, 2000);
 
-        this.intervalId2 = setInterval(() => {
+        this.intervalId4 = setInterval(() => {
             this.obstacleArrRupees.forEach((obstacleInstance, index) => {
                 obstacleInstance.moveDown()
                 this.detectCollisionRupee(obstacleInstance, index)
@@ -93,14 +95,14 @@ class Game {
     }
 
     removeObstacleCucoo(obstacleInstance) {
-        if (obstacleInstance.positionY < 0) {
+        if (obstacleInstance.positionY < 10) {
             obstacleInstance.domElement.remove();
             this.obstacleArrCucoos.shift(obstacleInstance)
         }
     }
 
     removeObstacleRupee(obstacleInstance) {
-        if (obstacleInstance.positionY < 0) {
+        if (obstacleInstance.positionY < 10) {
             obstacleInstance.domElement.remove();
             this.obstacleArrRupees.shift(obstacleInstance)
         }
@@ -110,8 +112,8 @@ class Game {
         const gameoverMessage = document.createElement('p');
         gameoverMessage.setAttribute('id', 'gameover');
         gameoverMessage.innerText = "You've killed too many chickens. They revolt and hunt you down. You're dead..."
-        const playerParent = document.getElementById("board");
-        playerParent.appendChild(gameoverMessage);
+        const Parent = document.getElementById("board");
+        Parent.appendChild(gameoverMessage);
         this.retryButton()
     }
 
@@ -120,16 +122,18 @@ class Game {
         retryButton.setAttribute('id', 'retry-button')
         retryButton.innerText = 'Try Again?';
         retryButton.is = 'retryButton'
+        const Parent = document.getElementById("board");
+        Parent.appendChild(retryButton);
         retryButton.addEventListener('click', () => {
             window.location.reload(true);
         })
-        const playerParent = document.getElementById("board");
-        playerParent.appendChild(retryButton);
     }
 
     stopGame() {
         clearInterval(this.intervalId1);
         clearInterval(this.intervalId2);
+        clearInterval(this.intervalId3);
+        clearInterval(this.intervalId4);
     }
 
     gameover() {
@@ -148,7 +152,7 @@ class Game {
     }
 
     win() {
-        if (this.rupeesScoreCount === 10){
+        if (this.rupeesScoreCount === 1){
             this.stopGame();
             this.winMessage();
             this.retryButton();
@@ -200,7 +204,7 @@ class Player {
     }
 
     moveRight() {
-        if (this.positionX === 100 - this.width) {
+        if (this.positionX === 80 - this.width) {
             return;
         }
         else {
@@ -213,8 +217,8 @@ class Player {
 
 class Obstacle {
     constructor() {
-        this.positionX = this.generateRandomNumber(0, 70); // change to be minus width
-        this.positionY = 100;
+        this.positionX = this.generateRandomNumber(10, 70); // change to be minus width
+        this.positionY = 80;
         this.width = 5;
         this.height = 10;
         this.domElement = null;
@@ -249,8 +253,8 @@ class Obstacle {
 
 class Rupees {
     constructor() {
-        this.positionX = this.generateRandomNumber(0, 70); // change to be minus width
-        this.positionY = 100;
+        this.positionX = this.generateRandomNumber(10, 70); // change to be minus width
+        this.positionY = 80;
         this.width = 5;
         this.height = 10;
         this.domElement = null;
